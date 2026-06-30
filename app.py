@@ -86,9 +86,13 @@ async def send_multiple_requests(uid, server_name, url):
         if tokens is None:
             app.logger.error("Failed to load tokens.")
             return None
-        for i in range(100):
+        
+        # ✅ SIRF YAHAN CHANGE KIYA HAI - 100 ki jagah 20 likes per token
+        total_requests = len(tokens) * 20  # 1 token = 20 likes
+        for i in range(total_requests):
             token = tokens[i % len(tokens)]["token"]
             tasks.append(send_request(encrypted_uid, token, url))
+        
         results = await asyncio.gather(*tasks, return_exceptions=True)
         return results
     except Exception as e:
@@ -164,7 +168,6 @@ def index():
         "endpoints": "/like?uid=<uid> or /like?uid=<uid>&server_name=<server_name>",
         "example": "/like?uid=123456789 or /like?uid=123456789&server_name=bd"
 })
-
 
 @app.route('/like', methods=['GET'])
 def handle_requests():
