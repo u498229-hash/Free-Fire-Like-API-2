@@ -99,11 +99,10 @@ async def send_multiple_requests(uid, server_name, url):
         total_requests = len(tokens) * 20
         logger.info(f"📊 Sending {total_requests} likes with {len(tokens)} tokens")
         
-        request_id = 0
         for i in range(total_requests):
             token = tokens[i % len(tokens)]["token"]
-            tasks.append(send_request(encrypted_uid, token, url, request_id))
-            request_id += 1
+            logger.info(f"📊 Request {i}: Using token {i % len(tokens)}")  # ✅ Debug: token number
+            tasks.append(send_request(encrypted_uid, token, url, i))
         
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
@@ -120,8 +119,8 @@ async def send_multiple_requests(uid, server_name, url):
         logger.info(f"📊 Successful: {success}")
         logger.info(f"📊 Failed: {failed}")
         
-        # Log first 5 results for debugging
-        for i, r in enumerate(results[:5]):
+        # Log first 10 results for debugging
+        for i, r in enumerate(results[:10]):
             logger.info(f"📊 Result {i}: {r}")
         
         return results, success, failed
@@ -193,7 +192,7 @@ def decode_protobuf(binary):
 @app.route('/', methods=['GET'])
 def index():
     return jsonify({
-        "credit": "UZAIR MODS",
+        "credit": "UZAIR",  # ✅ UZAIR set kar diya
         "message": "Welcome to the Free Fire Like API",
         "status": "API is running",
         "endpoints": "/like?uid=<uid> or /like?uid=<uid>&server_name=<server_name>",
@@ -272,9 +271,9 @@ def handle_requests():
         
         logger.info(f"📊 Likes after: {after_like} | Given: {like_given} | Status: {status}")
 
-        # ✅ Response with debug info
+        # ✅ Response with UZAIR credit
         return jsonify({
-            "credit": "https://t.me/paglu_dev",
+            "credit": "UZAIR",  # ✅ UZAIR set kar diya
             "LikesGivenByAPI": like_given,
             "LikesafterCommand": after_like,
             "LikesbeforeCommand": before_like,
